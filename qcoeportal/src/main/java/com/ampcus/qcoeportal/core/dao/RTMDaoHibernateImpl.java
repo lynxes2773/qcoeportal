@@ -6,6 +6,8 @@ import com.ampcus.qcoeportal.core.entity.ProjectRelease;
 import com.ampcus.qcoeportal.core.entity.Requirement;
 import com.ampcus.qcoeportal.core.entity.RequirementSourceDocument;
 import com.ampcus.qcoeportal.core.entity.RequirementSourceDocumentVersion;
+import com.ampcus.qcoeportal.core.entity.SourceType;
+
 import java.io.PrintStream;
 import java.util.List;
 import javax.persistence.Query;
@@ -180,6 +182,181 @@ public class RTMDaoHibernateImpl
     
     return requirements;
   }
+  
+  public List<Client> getClients()
+  {
+	  List<Client> clients = null;
+	  Session session = sessionFactory.openSession();
+	  Transaction tx = null;
+	  try
+	  {
+	      tx = session.getTransaction();
+	      tx.begin();
+	      Query qry = session.createQuery("from Client");
+	      clients = qry.getResultList();
+	      tx.commit();
+	  }
+	  catch (HibernateException he)
+	  {
+	      if (tx != null) {
+	        tx.rollback();
+	        he.printStackTrace();
+	      }
+	  }
+	  finally
+	  {
+	      session.close();
+	  }
+
+	  return clients;
+  }
+  
+  public List<Project> getProjects(Client client)
+  {
+	  List projects = null;
+      Session session = sessionFactory.openSession();
+	  Transaction tx = null;
+	  try
+	  {
+	      tx = session.getTransaction();
+	      tx.begin();
+	      Query qry = session.createQuery("from Project prj where prj.client.clientId=:clientId");
+	      qry.setParameter("clientId", client.getClientId());
+	      projects = qry.getResultList();	
+	      tx.commit();
+	  }
+	  catch (HibernateException he)
+	  {
+	      if (tx != null) {
+	        tx.rollback();
+	        he.printStackTrace();
+	      }
+	  }
+	  finally
+	  {
+	      session.close();
+	  }
+	  
+	  return projects;
+  }
+  
+  public List<ProjectRelease> getProjectReleases(Project project)
+  {
+	  List releases = null;
+      Session session = sessionFactory.openSession();
+	  Transaction tx = null;
+	  try
+	  {
+	      tx = session.getTransaction();
+	      tx.begin();
+	      Query qry = session.createQuery("from ProjectRelease pr where pr.project.projectId=:projectId");
+	      qry.setParameter("projectId", project.getProjectId());
+	      releases = qry.getResultList();
+	      tx.commit();
+	  }
+	  catch (HibernateException he)
+	  {
+	      if (tx != null) {
+	        tx.rollback();
+	        he.printStackTrace();
+	      }
+	  }
+	  finally
+	  {
+	      session.close();
+	  }
+	  
+	  return releases;
+  }
+  
+  public List<RequirementSourceDocument> getRequirementSourceDocuments(ProjectRelease release)
+  {
+	  List documents = null;
+      Session session = sessionFactory.openSession();
+	  Transaction tx = null;
+	  try
+	  {
+	      tx = session.getTransaction();
+	      tx.begin();
+	      Query qry = session.createQuery("from RequirementSourceDocument rsd where rsd.release.releaseId=:releaseId");
+	      qry.setParameter("releaseId", release.getReleaseId());
+	      documents = qry.getResultList();	
+	      tx.commit();
+	  }
+	  catch (HibernateException he)
+	  {
+	      if (tx != null) {
+	        tx.rollback();
+	        he.printStackTrace();
+	      }
+	  }
+	  finally
+	  {
+	      session.close();
+	  }
+	  
+	  return documents;
+  }
+  
+  public List<RequirementSourceDocumentVersion> getRequirementSourceDocumentVersions(RequirementSourceDocument document)
+  {
+	  List documentVersions = null;
+      Session session = sessionFactory.openSession();
+	  Transaction tx = null;
+	  try
+	  {
+	      tx = session.getTransaction();
+	      tx.begin();
+	      Query qry = session.createQuery("from RequirementSourceDocumentVersion rsdv where rsdv.requirementSourceDoc.reqSrcDocId=:reqSrcDocId");
+	      qry.setParameter("reqSrcDocId", document.getReqSrcDocId());
+	      documentVersions = qry.getResultList();
+	      tx.commit();
+	  }
+	  catch (HibernateException he)
+	  {
+	      if (tx != null) {
+	        tx.rollback();
+	        he.printStackTrace();
+	      }
+	  }
+	  finally
+	  {
+	      session.close();
+	  }
+	  
+	  return documentVersions;
+  }
+  
+  public List<SourceType> getSourceTypes()
+  {
+	  List sourceTypes=null;
+      Session session = sessionFactory.openSession();
+	  Transaction tx = null;
+	  try
+	  {
+	      tx = session.getTransaction();
+	      tx.begin();
+	      Query qry = session.createQuery("from SourceType");
+	      sourceTypes = qry.getResultList();
+	      tx.commit();
+	  }
+	  catch (HibernateException he)
+	  {
+	      if (tx != null) {
+	        tx.rollback();
+	        he.printStackTrace();
+	      }
+	  }
+	  finally
+	  {
+	      session.close();
+	  }
+	  
+	  
+	  return sourceTypes;
+  }
+  
+  
   
   @Autowired
   public void setSessionFactory(SessionFactory sessionFactory) {

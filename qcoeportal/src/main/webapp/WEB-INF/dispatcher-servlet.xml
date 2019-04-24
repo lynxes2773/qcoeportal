@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:aop="http://www.springframework.org/schema/aop"
+xmlns:context="http://www.springframework.org/schema/context"
+xmlns:mvc="http://www.springframework.org/schema/mvc"
+xmlns:tx="http://www.springframework.org/schema/tx"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/aop 
+http://www.springframework.org/schema/aop/spring-aop.xsd
+http://www.springframework.org/schema/mvc
+http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+<!-- configuration details go here -->
+
+	<context:annotation-config/>
+	<context:component-scan base-package="com.ampcus.qcoeportal.web,com.ampcus.qcoeportal.web.controller" />
+
+	<!-- Mapping URLs to their Controllers-->
+	<bean id="simpleUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<props>
+				<prop key="/hello.htm">defaultController</prop>
+			</props>
+		</property>
+	</bean>	
+
+	<mvc:annotation-driven/>
+
+	<!-- Beans related to database access through Hibernate -->
+
+	<bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location">
+            <value>resources/config/db.properties</value>
+        </property>
+    </bean>
+
+	<context:property-placeholder properties-ref="configProperties" />
+
+ 
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${hibernate.connection.driver_class}"/>
+		<property name="jdbcUrl" value="${hibernate.connection.url}"/>
+		<property name="user" value="${hibernate.connection.username}"/>
+		<property name="password" value="${hibernate.connection.password}"/>
+	</bean>
+		
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+ 		<property name="dataSource" ref="dataSource"/>
+		<property name="packagesToScan" value="com.ampcus.qcoeportal.core.dao,com.ampcus.qcoeportal.core.entity"/>
+    	<property name="hibernateProperties">
+        	<props>
+ 				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.cache.use_second_level_cache">${hibernate.cache.use_second_level_cache}</prop>
+				<prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>
+				<prop key="show_sql">${show_sql}</prop>
+				<prop key="format_sql">${format_sql}</prop>
+				<prop key="hibernate.c3p0.min_size">${hibernate.c3p0.min_size}</prop>
+				<prop key="hibernate.c3p0.max_size">${hibernate.c3p0.max_size}</prop>
+				<prop key="hibernate.c3p0.timeout">${hibernate.c3p0.timeout}</prop>
+				<prop key="hibernate.c3p0.max_statements">${hibernate.c3p0.max_statements}</prop>
+				<prop key="hibernate.c3p0.idle_test_period">${hibernate.c3p0.idle_test_period}</prop>
+				<prop key="preferredTestQuery">${preferredTestQuery}</prop>
+				<prop key="testConnectionOnCheckin">${testConnectionOnCheckin}</prop>
+				<prop key="testConnectionOnCheckout">${testConnectionOnCheckout}</prop>
+				<prop key="idleConnectionTestPeriod">${idleConnectionTestPeriod}</prop>
+        	</props>
+    	</property>
+    </bean>
+    
+	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+    	<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="persistenceExceptionTranslationPostProcessor" class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+</beans>

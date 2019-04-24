@@ -1,0 +1,1 @@
+mvn archetype:create-from-project -DgroupId=org.ampcus -DartifactId=SampleWebApp -DarchetypeArtifactId=maven-archetype-archetype

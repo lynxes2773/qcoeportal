@@ -22,13 +22,13 @@ public abstract interface RTMDao
   
   public abstract List<Client> getClients();
   
-  public abstract List<Project> getProjects(Client client);
+  public abstract List<Project> getProjects(String clientId);
   
-  public abstract List<ProjectRelease> getProjectReleases(Project project);
+  public abstract List<ProjectRelease> getProjectReleases(String projectId);
   
-  public abstract List<RequirementSourceDocument> getRequirementSourceDocuments(ProjectRelease releases);
+  public abstract List<RequirementSourceDocument> getRequirementSourceDocuments(String releaseId);
   
-  public abstract List<RequirementSourceDocumentVersion> getRequirementSourceDocumentVersions(RequirementSourceDocument document);
+  public abstract List<RequirementSourceDocumentVersion> getRequirementSourceDocumentVersions(String sourceDocId);
   
   public abstract List<SourceType> getSourceTypes();
 }

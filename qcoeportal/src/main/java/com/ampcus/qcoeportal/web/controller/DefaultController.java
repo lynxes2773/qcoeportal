@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Map;
@@ -74,12 +75,47 @@ public class DefaultController extends AbstractController {
 	{
 		ModelAndView modelAndView = new ModelAndView("hello");
 		List requirements = requirementService.getAllRequirements(new Integer(1));
-//		System.out.println("#############################");
-//		System.out.println("requirements.size(): "+requirements.size());
-//		System.out.println("#############################");
 		modelAndView.addObject("requirements", requirements);		
 		
 		return modelAndView;
+	}
+	
+	@RequestMapping("/getClients.htm")
+	public void getClients(HttpServletRequest request, HttpServletResponse response)
+	{
+		try
+		{
+			ObjectInputStream ois = new ObjectInputStream(request.getInputStream());
+			Map object = (Map)ois.readObject();
+			
+			List<Map> clients = requirementService.getAllClients();
+			
+			ObjectOutputStream oos = new ObjectOutputStream(response.getOutputStream());
+			oos.writeObject(clients);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping("/getProjectsForClient.htm")
+	public void getProjectsForClient(HttpServletRequest request, HttpServletResponse response) throws IOException
+	{
+		try
+		{
+			ObjectInputStream ois = new ObjectInputStream(request.getInputStream());
+			String clientId = (String)ois.readObject();
+			
+			List<Map> projects = requirementService.getProjectsForClient(clientId);
+			
+			ObjectOutputStream oos = new ObjectOutputStream(response.getOutputStream());
+			oos.writeObject(projects);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	@RequestMapping({"/receiveNewRequirement.htm"})

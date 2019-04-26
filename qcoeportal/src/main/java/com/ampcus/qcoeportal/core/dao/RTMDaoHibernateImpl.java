@@ -211,7 +211,7 @@ public class RTMDaoHibernateImpl
 	  return clients;
   }
   
-  public List<Project> getProjects(Client client)
+  public List<Project> getProjects(String clientId)
   {
 	  List projects = null;
       Session session = sessionFactory.openSession();
@@ -221,7 +221,7 @@ public class RTMDaoHibernateImpl
 	      tx = session.getTransaction();
 	      tx.begin();
 	      Query qry = session.createQuery("from Project prj where prj.client.clientId=:clientId");
-	      qry.setParameter("clientId", client.getClientId());
+	      qry.setParameter("clientId", clientId);
 	      projects = qry.getResultList();	
 	      tx.commit();
 	  }
@@ -240,7 +240,7 @@ public class RTMDaoHibernateImpl
 	  return projects;
   }
   
-  public List<ProjectRelease> getProjectReleases(Project project)
+  public List<ProjectRelease> getProjectReleases(String projectId)
   {
 	  List releases = null;
       Session session = sessionFactory.openSession();
@@ -250,7 +250,7 @@ public class RTMDaoHibernateImpl
 	      tx = session.getTransaction();
 	      tx.begin();
 	      Query qry = session.createQuery("from ProjectRelease pr where pr.project.projectId=:projectId");
-	      qry.setParameter("projectId", project.getProjectId());
+	      qry.setParameter("projectId", projectId);
 	      releases = qry.getResultList();
 	      tx.commit();
 	  }
@@ -269,7 +269,7 @@ public class RTMDaoHibernateImpl
 	  return releases;
   }
   
-  public List<RequirementSourceDocument> getRequirementSourceDocuments(ProjectRelease release)
+  public List<RequirementSourceDocument> getRequirementSourceDocuments(String releaseId)
   {
 	  List documents = null;
       Session session = sessionFactory.openSession();
@@ -279,7 +279,7 @@ public class RTMDaoHibernateImpl
 	      tx = session.getTransaction();
 	      tx.begin();
 	      Query qry = session.createQuery("from RequirementSourceDocument rsd where rsd.release.releaseId=:releaseId");
-	      qry.setParameter("releaseId", release.getReleaseId());
+	      qry.setParameter("releaseId", releaseId);
 	      documents = qry.getResultList();	
 	      tx.commit();
 	  }
@@ -298,7 +298,7 @@ public class RTMDaoHibernateImpl
 	  return documents;
   }
   
-  public List<RequirementSourceDocumentVersion> getRequirementSourceDocumentVersions(RequirementSourceDocument document)
+  public List<RequirementSourceDocumentVersion> getRequirementSourceDocumentVersions(String sourceDocId)
   {
 	  List documentVersions = null;
       Session session = sessionFactory.openSession();
@@ -308,7 +308,7 @@ public class RTMDaoHibernateImpl
 	      tx = session.getTransaction();
 	      tx.begin();
 	      Query qry = session.createQuery("from RequirementSourceDocumentVersion rsdv where rsdv.requirementSourceDoc.reqSrcDocId=:reqSrcDocId");
-	      qry.setParameter("reqSrcDocId", document.getReqSrcDocId());
+	      qry.setParameter("reqSrcDocId", sourceDocId);
 	      documentVersions = qry.getResultList();
 	      tx.commit();
 	  }

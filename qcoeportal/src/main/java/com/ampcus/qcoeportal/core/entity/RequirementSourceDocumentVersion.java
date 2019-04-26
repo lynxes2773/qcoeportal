@@ -59,4 +59,26 @@ public class RequirementSourceDocumentVersion
   {
     this.requirements = requirements;
   }
+  
+  @Column(name="VERSION_NUM")
+  private String versionNumber;
+  public String getVersionNumber() {
+		return versionNumber;
+  }
+	
+  public void setVersionNumber(String versionNumber) {
+		this.versionNumber = versionNumber;
+  }
+  
+  @Column(name="SRC_DOC_FILENAME")
+  private String fileName;
+
+	public String getFileName() {
+		return fileName;
+	}
+	
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+  
 }
